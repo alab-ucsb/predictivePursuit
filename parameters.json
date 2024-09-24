@@ -1,0 +1,1 @@
+{"angular_min": -90.0, "angular_max": 180, "linear_min": 0, "linear_max": 100, "peak": 32, "kappa": 1.0, "a_shape": 3.0, "a_scale": 1.0, "l_shape": 5.0, "l_scale": 3.0, "w_size": 526, "h_size": 267.5, "wp_size": 250, "hp_size": 250, "speed_multiplier": 1.0, "a_dist": "Wrapped", "l_dist": "Gaussian"}
