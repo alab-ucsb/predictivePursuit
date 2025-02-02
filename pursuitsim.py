@@ -79,30 +79,33 @@ def run_trial(d, a, l):
                 pass
             elif t == 1 or t % t_mod == 0:
                 angular_velocity += np.random.choice(a) - (angular_max / 2)
-                linear_velocity = 1 + (np.random.choice(l) / linear_max)
+                linear_velocity = np.random.choice(l) / t_mod
                 delta_x = math.cos(math.radians(angular_velocity)) * linear_velocity
                 delta_y = math.sin(math.radians(angular_velocity)) * linear_velocity
 
             x_pos += delta_x
             y_pos += delta_y
+
+            # Wrap around logic for x-axis
+            if x_pos > 29.21:
+                x_pos = -29.21
+            elif x_pos < -29.21:
+                x_pos = 29.21
+            
+            # Wrap around logic for y-axis
+            if y_pos > 31.4325:
+                y_pos = -31.4325
+            elif y_pos < -31.4325:
+                y_pos = 31.4325
+            
             col_x.append(x_pos)
             col_y.append(y_pos)
 
         # Create DataFrame
         df = pd.DataFrame({'X': col_x, 'Y': col_y})
-
-        # Normalize to [-scale_x, scale_x] and [-scale_y, scale_y]
-        min_x, max_x = df['X'].min(), df['X'].max()
-        min_y, max_y = df['Y'].min(), df['Y'].max()
-        df['Norm X'] = (2 * scale_x) * ((df['X'] - min_x) / (max_x - min_x)) - scale_x
-        df['Norm Y'] = (2 * scale_y) * ((df['Y'] - min_y) / (max_y - min_y)) - scale_y
-
-        # Check if the initial normalized values are within the specified ranges
-        start_norm_x = df['Norm X'].iloc[0]
-        start_norm_y = df['Norm Y'].iloc[0]
-        if x_range[0] <= start_norm_x <= x_range[1] and y_range[0] <= start_norm_y <= y_range[1]:
-            print(f"Generated Trial at ({start_norm_x}, {start_norm_y})")
-            return df
+        
+        print(f"Generated Trial with starting position ({df['X'].iloc[0]}, {df['Y'].iloc[0]})")
+        return df
 
 # Parameters
 HZ = 30
@@ -563,7 +566,7 @@ def import_csv():
     global traj, default_date
     traj.clear()
 
-    filepath = f"trial_results_{datetime.now().strftime('%m-%d-%y')}.csv"
+    filepath = f"Trajectories/trial_results_{datetime.now().strftime('%m-%d-%y')}.csv"
 
     # Load the CSV and group by 'Trial' to organize data
     df = pd.read_csv(filepath)
