@@ -611,12 +611,13 @@ def show_plot(index):
     with dpg.window(label="Trajectory Map", width=526, height=515, tag="Trajectory Plot", no_title_bar=True, no_scrollbar=True, no_move=True):
         with dpg.tab_bar(tag='tab_bar'):
             with dpg.tab(label="Trajectory Plot"):
-                plot_id = dpg.add_plot(label=f'Trajectory Map - Trial {index} ({trial_duration:.2f} s)', width=510, height=450)
-                x_axis = dpg.add_plot_axis(dpg.mvXAxis, label='X Coordinate', parent=plot_id)
-                y_axis = dpg.add_plot_axis(dpg.mvYAxis, label='Y Coordinate', parent=plot_id)
-
-                # Plot the trajectory series
-                dpg.add_line_series(df['X'].tolist(), df['Y'].tolist(), label="Trajectory", parent=y_axis, tag="Trajectory Series")
+                with dpg.plot(label=f'Trajectory Map - Trial {index} ({trial_duration:.2f} s)', width=510, height=450, tag='traj_plot'):
+                    dpg.add_plot_axis(dpg.mvXAxis, label='x_axis', tag='traj_x')
+                    dpg.add_plot_axis(dpg.mvYAxis, label='y_axis', tag='traj_y')
+                    dpg.set_axis_limits('traj_x', -30, 30)
+                    dpg.set_axis_limits('traj_y', -32, 32)
+                    # Plot trajectory
+                    dpg.add_line_series(df['X'].tolist(), df['Y'].tolist(), parent='traj_y', label="Trajectory", tag="Trajectory Series")
 
             with dpg.tab(label="Laser"):
                 with dpg.drawlist(width=500, height=450, tag="laser_drawlist"):
